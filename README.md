@@ -72,8 +72,10 @@ xyz-mobile/
 - ngrok for local testing (optional)
 
 ### Step 1: Clone the Repository
+
 ```bash
-git clone https://github.com/yourusername/xyz-mobile.git
+
+git clone https://github.com/Kshee04/xyz-mobile.git
 cd xyz-mobile
 
 ### Step 2: Set Up Firebase
