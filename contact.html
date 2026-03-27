@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XYZ Mobile · Contact Us</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts: Inter + Space Grotesk -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #001f3f;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        :root {
+            --xyz-primary: #C0004A;
+            --xyz-primary-dark: #8F0037;
+            --xyz-accent-orange: #FF5E00;
+            --xyz-dark-blue: #003D7C;
+            --xyz-bg-light: #F5F7FA;
+            --xyz-border: #E0E8F0;
+        }
+
+        /* Header Styles */
+        .site-header {
+            background: white;
+            border-bottom: 1px solid var(--xyz-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+        }
+
+        .header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-icon {
+            font-size: 1.8rem;
+            color: var(--xyz-primary);
+        }
+        .logo-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--xyz-dark-blue);
+        }
+        .logo-text span {
+            color: var(--xyz-primary);
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #1A2B3E;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+            transition: 0.2s;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: var(--xyz-primary);
+            border-bottom-color: var(--xyz-primary);
+        }
+
+        .nav-cta {
+            background-color: var(--xyz-primary);
+            color: white !important;
+            padding: 0.6rem 1.5rem !important;
+            border-radius: 40px;
+            border-bottom: none !important;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.8rem;
+            color: var(--xyz-primary);
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .mobile-nav-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .mobile-nav-overlay.active {
+            display: block;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .mobile-nav-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 400px;
+            height: 100vh;
+            background: white;
+            z-index: 1000;
+            padding: 80px 30px 30px;
+            transition: right 0.3s ease;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+
+        .mobile-nav-menu.active {
+            right: 0;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            text-decoration: none;
+            color: var(--xyz-dark-blue);
+            font-weight: 600;
+            font-size: 1.2rem;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--xyz-border);
+            transition: 0.2s;
+        }
+
+        .mobile-nav-link:hover {
+            color: var(--xyz-primary);
+            padding-left: 10px;
+        }
+
+        .mobile-nav-cta {
+            background-color: var(--xyz-primary);
+            color: white !important;
+            text-align: center;
+            border-radius: 40px;
+            margin-top: 20px;
+            border-bottom: none !important;
+        }
+
+        .close-menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            color: var(--xyz-primary);
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(145deg, #FFF0F5, #E6F3FF);
+            padding: 60px 0 40px;
+            text-align: center;
+            border-bottom: 1px solid var(--xyz-border);
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+            color: var(--xyz-dark-blue);
+            margin-bottom: 16px;
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            color: #2F4A62;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Contact Grid */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            padding: 60px 0;
+        }
+
+        .contact-info {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            border: 1px solid var(--xyz-border);
+        }
+
+        .info-item {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-icon {
+            width: 50px;
+            height: 50px;
+            background: #FFF0F5;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-icon i {
+            font-size: 1.5rem;
+            color: var(--xyz-primary);
+        }
+
+        .info-content h3 {
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .info-content p {
+            color: #2F4A62;
+        }
+
+        .map-container {
+            margin-top: 30px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--xyz-border);
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 250px;
+            border: none;
+        }
+
+        /* Contact Form */
+        .contact-form {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            border: 1px solid var(--xyz-border);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--xyz-border);
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: 2px solid var(--xyz-primary);
+            border-color: transparent;
+        }
+
+        .btn-submit {
+            background: var(--xyz-primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: var(--xyz-primary-dark);
+        }
+
+        .btn-submit:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .form-message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .form-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .form-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: #FFF0F5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--xyz-primary);
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .social-link:hover {
+            background: var(--xyz-primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 48px 0 30px;
+            border-top: 1px solid var(--xyz-border);
+            color: #2F4A62;
+            background: white;
+        }
+
+        .footer a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            color: var(--xyz-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .nav-menu {
+                display: none;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            .page-header h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- TOP BANNER -->
+    <div class="top-banner">
+        <div class="container banner-flex">
+            <div class="banner-left">
+                <i class="fas fa-bolt"></i> New: 
+                <strong>Software Engineering & AI Bootcamps</strong> 
+                <a href="#">Learn More</a>
+            </div>
+            <div class="banner-right">
+                <i class="fas fa-users"></i> XYZ Community 
+                <a href="#">Join Free</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="container header-row">
+            <div class="logo-area">
+                <i class="fas fa-mobile-alt logo-icon"></i>
+                <span class="logo-text">XYZ<span>Mobile</span></span>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="courses.html" class="nav-link">Courses</a>
+                <a href="how-it-works.html" class="nav-link">How it works</a>
+                <a href="community.html" class="nav-link">Community</a>
+                <a href="outcomes.html" class="nav-link">Outcomes</a>
+                <a href="resources.html" class="nav-link">Resources</a>
+                <a href="contact.html" class="nav-link active">Contact</a>
+                <a href="#" class="nav-link nav-cta">Enroll now</a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+    <div class="mobile-nav-menu" id="mobileNavMenu">
+        <button class="close-menu" id="closeMenuBtn">
+            <i class="fas fa-times"></i>
+        </button>
+        <a href="index.html" class="mobile-nav-link">Home</a>
+        <a href="courses.html" class="mobile-nav-link">Courses</a>
+        <a href="how-it-works.html" class="mobile-nav-link">How it works</a>
+        <a href="community.html" class="mobile-nav-link">Community</a>
+        <a href="outcomes.html" class="mobile-nav-link">Outcomes</a>
+        <a href="resources.html" class="mobile-nav-link">Resources</a>
+        <a href="#" class="mobile-nav-link">Contact</a>
+        <a href="#" class="mobile-nav-link mobile-nav-cta">Enroll now</a>
+    </div>
+
+    <main>
+        <!-- PAGE HEADER -->
+        <section class="page-header">
+            <div class="container">
+                <h1>Contact Us</h1>
+                <p>Have questions? We're here to help you start your tech journey</p>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section class="container">
+            <div class="contact-grid">
+                <!-- Contact Information -->
+                <div class="contact-info">
+                    <h2 style="margin-bottom: 30px;">Get in Touch</h2>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="info-content">
+                            <h3>Visit Us</h3>
+                            <p>Ngong Road, Nairobi<br>Kenya</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="info-content">
+                            <h3>Call Us</h3>
+                            <p>+254 700 000 000<br>Mon-Fri, 8am-6pm</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="info-content">
+                            <h3>Email Us</h3>
+                            <p>info@xyzmobile.com<br>admissions@xyzmobile.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="info-content">
+                            <h3>Office Hours</h3>
+                            <p>Monday - Friday: 8am - 6pm<br>Saturday: 9am - 2pm</p>
+                        </div>
+                    </div>
+
+                    <div class="map-container">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.846296276494!2d36.781!3d-1.283!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMcKwMTcnMDAuMCJTIDM2wrA0NycwMC4wIkU!5e0!3m2!1sen!2ske!4v1234567890!5m2!1sen!2ske" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <!-- Contact Form with Firebase -->
+                <div class="contact-form">
+                    <h2 style="margin-bottom: 30px;">Send us a Message</h2>
+                    
+                    <!-- Form message will appear here -->
+                    <div id="formMessage" class="form-message"></div>
+                    
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="fullName">Full Name *</label>
+                            <input type="text" id="fullName" name="fullName" required placeholder="John Doe">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" required placeholder="john@example.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" placeholder="+254 700 000 000">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="interest">I'm interested in *</label>
+                            <select id="interest" name="interest" required>
+                                <option value="">Select a program</option>
+                                <option value="Software Engineering">Software Engineering</option>
+                                <option value="Data Science">Data Science</option>
+                                <option value="Cyber Security">Cyber Security</option>
+                                <option value="AI & Machine Learning">AI & Machine Learning</option>
+                                <option value="General Inquiry">General Inquiry</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Message *</label>
+                            <textarea id="message" name="message" rows="5" required placeholder="Tell us how we can help..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="newsletter" checked> 
+                                Subscribe to our newsletter for updates
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn-submit" id="submitBtn">
+                            Send Message <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 30px;">
+            <div>
+                <span style="font-size: 1.7rem; font-weight: 700;">XYZ<span style="color: var(--xyz-primary);">Mobile</span></span>
+                <p style="margin-top: 10px;">© 2026 XYZ Mobile Institution</p>
+            </div>
+            <div style="display: flex; gap: 60px; flex-wrap: wrap;">
+                <div>
+                    <strong>Programs</strong><br>
+                    <a href="courses.html">Software Eng</a><br>
+                    <a href="courses.html">Data Science</a><br>
+                    <a href="courses.html">Cyber Security</a><br>
+                    <a href="courses.html">AI</a>
+                </div>
+                <div>
+                    <strong>Company</strong><br>
+                    <a href="#">About</a><br>
+                    <a href="community.html">Community</a><br>
+                    <a href="#">Careers</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDKs (always load these first) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+    <!-- Your Firebase config and helper functions -->
+    <script>
+        
+        // 🔥 YOUR FIREBASE CONFIG 
+        const firebaseConfig = {
+        apiKey: "AIzaSyC2Ee8L_7cMX6vHw-BGJOW-y3Ut1EbDaBo",
+        authDomain: "xyz-mobile-institution-b2591.firebaseapp.com",
+        projectId: "xyz-mobile-institution-b2591",
+        storageBucket: "xyz-mobile-institution-b2591.firebasestorage.app",
+        messagingSenderId: "634389271239",
+        appId: "1.634389271239:web:612670fd0cd80a53ad24e2"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // Save contact form function
+        async function saveContact(formData) {
+            try {
+                await db.collection('contacts').add({
+                    ...formData,
+                    interest: document.getElementById('interest').value,
+                    newsletter: document.getElementById('newsletter').checked,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    status: 'new'
+                });
+                return { success: true };
+            } catch (error) {
+                console.error('Error saving contact:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Mobile menu functionality
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileNavMenu = document.getElementById('mobileNavMenu');
+        const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+
+        function openMobileMenu() {
+            mobileNavMenu.classList.add('active');
+            mobileNavOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            mobileNavMenu.classList.remove('active');
+            mobileNavOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        mobileMenuBtn.addEventListener('click', openMobileMenu);
+        closeMenuBtn.addEventListener('click', closeMobileMenu);
+        mobileNavOverlay.addEventListener('click', closeMobileMenu);
+
+        // Contact form submission
+        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const formMessage = document.getElementById('formMessage');
+            
+            // Disable button and show loading
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Sending... <i class="fas fa-spinner fa-spin"></i>';
+            formMessage.className = 'form-message';
+            formMessage.style.display = 'none';
+            
+            // Get form data
+            const formData = {
+                name: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                message: document.getElementById('message').value
+            };
+            
+            // Save to Firebase
+            const result = await saveContact(formData);
+            
+            if (result.success) {
+                // Show success message
+                formMessage.className = 'form-message success';
+                formMessage.innerHTML = '<i class="fas fa-check-circle"></i> Message sent successfully! We\'ll get back to you soon.';
+                formMessage.style.display = 'block';
+                
+                // Reset form
+                document.getElementById('contactForm').reset();
+            } else {
+                // Show error message
+                formMessage.className = 'form-message error';
+                formMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error: ' + result.error;
+                formMessage.style.display = 'block';
+            }
+            
+            // Re-enable button
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Send Message <i class="fas fa-paper-plane"></i>';
+        });
+    </script>
+</body>
+</html>

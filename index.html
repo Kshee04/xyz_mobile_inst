@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XYZ Mobile Institution · Software Engineering & AI</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts: Inter + Space Grotesk -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ---------- GLOBAL & VARIABLES ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #001f3f;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        h1, h2, h3, h4, .heading-font {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        :root {
+            --xyz-primary: #C0004A;
+            --xyz-primary-dark: #8F0037;
+            --xyz-accent-orange: #FF5E00;
+            --xyz-accent-cyan: #00A2E5;
+            --xyz-dark-blue: #003D7C;
+            --xyz-bg-light: #F5F7FA;
+            --xyz-border: #E0E8F0;
+        }
+
+        /* ---------- UTILITY CLASSES ---------- */
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: 1.5px solid transparent;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background-color: var(--xyz-primary);
+            color: white;
+            border-color: var(--xyz-primary);
+        }
+        .btn-primary:hover {
+            background-color: var(--xyz-primary-dark);
+            border-color: var(--xyz-primary-dark);
+        }
+
+        .btn-outline {
+            border-color: var(--xyz-primary);
+            color: var(--xyz-primary);
+            background: white;
+        }
+        .btn-outline:hover {
+            background: #FFF0F5;
+        }
+
+        /* ---------- HEADER WITH MOBILE NAVIGATION ---------- */
+        .site-header {
+            background: white;
+            border-bottom: 1px solid var(--xyz-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+        }
+
+        .header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1001;
+        }
+        .logo-icon {
+            font-size: 1.8rem;
+            color: var(--xyz-primary);
+        }
+        .logo-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--xyz-dark-blue);
+        }
+        .logo-text span {
+            color: var(--xyz-primary);
+        }
+
+        /* Desktop Navigation */
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #1A2B3E;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .nav-link:hover {
+            color: var(--xyz-primary);
+            border-bottom-color: var(--xyz-primary);
+        }
+        .nav-link.active {
+            color: var(--xyz-primary);
+            border-bottom-color: var(--xyz-primary);
+        }
+
+        .nav-cta {
+            background-color: var(--xyz-primary);
+            color: white !important;
+            padding: 0.6rem 1.5rem !important;
+            border-radius: 40px;
+            border-bottom: none !important;
+        }
+        .nav-cta:hover {
+            background-color: var(--xyz-primary-dark);
+            color: white !important;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.8rem;
+            color: var(--xyz-primary);
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 1001;
+            padding: 10px;
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .mobile-nav-overlay.active {
+            display: block;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .mobile-nav-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 400px;
+            height: 100vh;
+            background: white;
+            z-index: 1000;
+            padding: 80px 30px 30px;
+            transition: right 0.3s ease;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+
+        .mobile-nav-menu.active {
+            right: 0;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            text-decoration: none;
+            color: var(--xyz-dark-blue);
+            font-weight: 600;
+            font-size: 1.2rem;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--xyz-border);
+            transition: 0.2s;
+        }
+
+        .mobile-nav-link:hover {
+            color: var(--xyz-primary);
+            padding-left: 10px;
+        }
+
+        .mobile-nav-cta {
+            background-color: var(--xyz-primary);
+            color: white !important;
+            text-align: center;
+            border-radius: 40px;
+            margin-top: 20px;
+            border-bottom: none !important;
+        }
+
+        .close-menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            color: var(--xyz-primary);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        /* ---------- TOP BANNER ---------- */
+        .top-banner {
+            background: linear-gradient(90deg, #FFE5E5, #E0F0FF);
+            padding: 8px 0;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #FFB5B5;
+            color: var(--xyz-dark-blue);
+        }
+        .banner-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .banner-left a, .banner-right a {
+            text-decoration: none;
+            background: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            margin-left: 12px;
+            color: var(--xyz-primary);
+            border: 1px solid var(--xyz-primary);
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        /* ---------- HERO SECTION ---------- */
+        .hero {
+            padding: 60px 0 50px;
+            background: white;
+        }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 40px;
+            align-items: center;
+        }
+        .hero h1 {
+            font-size: 3.2rem;
+            line-height: 1.1;
+            color: var(--xyz-dark-blue);
+            margin-bottom: 20px;
+        }
+        .hero-highlight {
+            color: var(--xyz-primary);
+            border-bottom: 4px solid var(--xyz-accent-orange);
+        }
+        .hero-description {
+            font-size: 1.1rem;
+            color: #2F4A62;
+            margin-bottom: 32px;
+        }
+        .hero-badge-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin: 28px 0 16px;
+        }
+        .badge-pill {
+            background: var(--xyz-bg-light);
+            padding: 8px 22px;
+            border-radius: 40px;
+            font-weight: 600;
+            color: var(--xyz-dark-blue);
+            border: 1px solid var(--xyz-border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .badge-pill i {
+            color: var(--xyz-primary);
+        }
+
+        .hero-image-placeholder {
+            background: linear-gradient(145deg, #FFE5E5, #E6F3FF);
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+            border: 1px solid #FFB5B5;
+        }
+        .hero-image-placeholder i {
+            font-size: 5rem;
+            color: var(--xyz-primary);
+            opacity: 0.7;
+            margin-bottom: 15px;
+        }
+
+        /* ---------- DISCIPLINE TABS ---------- */
+        .discipline-tabs {
+            display: flex;
+            gap: 2rem;
+            margin: 40px 0 30px;
+            border-bottom: 2px solid var(--xyz-border);
+            padding-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .discipline-tab {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 5px 0;
+            border-bottom: 4px solid transparent;
+        }
+        .discipline-tab:hover {
+            color: var(--xyz-primary);
+        }
+        .discipline-tab.active {
+            color: var(--xyz-primary);
+            border-bottom-color: var(--xyz-primary);
+        }
+
+        /* ---------- CONTENT SECTIONS ---------- */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Software Engineering Description */
+        .software-eng-description {
+            background: var(--xyz-bg-light);
+            padding: 40px;
+            border-radius: 24px;
+            margin: 40px 0;
+            border-left: 8px solid var(--xyz-primary);
+        }
+        .software-eng-description h2 {
+            font-size: 2rem;
+            color: var(--xyz-dark-blue);
+            margin-bottom: 16px;
+        }
+        .software-eng-description p {
+            font-size: 1.1rem;
+            color: #2F4A62;
+            max-width: 800px;
+        }
+
+        /* Course Offerings */
+        .offerings-title {
+            font-size: 2rem;
+            color: var(--xyz-dark-blue);
+            margin: 40px 0 20px;
+        }
+        .offerings-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        .offering-card {
+            background: white;
+            border: 1px solid var(--xyz-border);
+            border-radius: 20px;
+            padding: 28px;
+            transition: 0.2s;
+        }
+        .offering-card:hover {
+            border-color: var(--xyz-primary);
+            box-shadow: 0 10px 25px rgba(192,0,74,0.08);
+        }
+        .offering-card h3 {
+            font-size: 1.4rem;
+            color: var(--xyz-dark-blue);
+            margin-bottom: 12px;
+        }
+        .offering-card .delivery-modes {
+            color: var(--xyz-primary);
+            font-weight: 600;
+            margin: 16px 0 8px;
+            font-size: 0.9rem;
+        }
+        .offering-card ul {
+            list-style: none;
+            color: #2F4A62;
+        }
+        .offering-card li {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .offering-card li i {
+            color: var(--xyz-accent-orange);
+            width: 20px;
+        }
+
+        /* Data Science Grid */
+        .ds-grid, .cyber-grid, .ai-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .ds-card {
+            background: white;
+            border: 1px solid var(--xyz-border);
+            border-radius: 20px;
+            padding: 30px;
+        }
+        .ds-card h3 {
+            color: var(--xyz-primary);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        .ds-card ul {
+            list-style: none;
+            margin-top: 10px;
+        }
+        .ds-card li {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ds-card li i {
+            color: var(--xyz-accent-orange);
+        }
+
+        /* ---------- CATEGORY CARDS ---------- */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin: 40px 0 60px;
+        }
+        .category-card {
+            background: white;
+            border: 1px solid var(--xyz-border);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .category-card:hover {
+            border-color: var(--xyz-primary);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(192,0,74,0.08);
+        }
+        .category-card i {
+            font-size: 2.5rem;
+            color: var(--xyz-primary);
+            margin-bottom: 16px;
+        }
+        .category-card h3 {
+            font-size: 1.5rem;
+            color: var(--xyz-dark-blue);
+            margin-bottom: 8px;
+        }
+        .category-card p {
+            color: #2F4A62;
+            font-size: 0.95rem;
+        }
+
+        /* ---------- FEATURE PILLARS ---------- */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin: 70px 0;
+        }
+        .feature-item {
+            background: white;
+            padding: 24px;
+            border-radius: 20px;
+            border: 1px solid var(--xyz-border);
+        }
+        .feature-item i {
+            font-size: 2rem;
+            color: var(--xyz-primary);
+            margin-bottom: 18px;
+        }
+        .feature-item h4 {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+        }
+
+        /* ---------- STATS AREA ---------- */
+        .stats-area {
+            background: linear-gradient(145deg, #FFF0F5, #E6F3FF);
+            border-radius: 48px;
+            padding: 50px 40px;
+            margin: 60px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 30px;
+        }
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--xyz-primary);
+        }
+        .stat-label {
+            color: var(--xyz-dark-blue);
+            font-weight: 500;
+        }
+
+        /* ---------- TESTIMONIALS ---------- */
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+            margin: 50px 0;
+        }
+        .testimonial-card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px 24px;
+            border: 1px solid var(--xyz-border);
+        }
+        .testimonial-card i.fa-quote-left {
+            color: var(--xyz-primary);
+            opacity: 0.3;
+            font-size: 1.8rem;
+            margin-bottom: 16px;
+        }
+        .testimonial-text {
+            color: #2F4A62;
+            margin-bottom: 20px;
+        }
+        .testimonial-author {
+            font-weight: 700;
+            color: var(--xyz-dark-blue);
+        }
+
+        /* ---------- COMPANY STRIP ---------- */
+        .company-strip {
+            background: white;
+            padding: 40px 0;
+            border-top: 1px solid var(--xyz-border);
+            border-bottom: 1px solid var(--xyz-border);
+            margin: 40px 0;
+        }
+        .logo-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+        .logo-cloud span {
+            font-size: 1.2rem;
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--xyz-dark-blue);
+            font-weight: 600;
+        }
+
+        /* ---------- CTA SECTION ---------- */
+        .cta-large {
+            background: linear-gradient(145deg, var(--xyz-dark-blue), #001F3F);
+            border-radius: 48px;
+            padding: 70px 50px;
+            color: white;
+            margin: 70px 0;
+            text-align: center;
+        }
+        .cta-large h2 {
+            font-size: 2.8rem;
+            color: white;
+            margin-bottom: 20px;
+        }
+        .btn-cta-giant {
+            background: var(--xyz-primary);
+            border: none;
+            padding: 16px 52px;
+            font-size: 1.1rem;
+            border-radius: 60px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 20px;
+        }
+        .btn-cta-giant:hover {
+            background: var(--xyz-primary-dark);
+        }
+
+        /* ---------- FOOTER ---------- */
+        .footer {
+            padding: 48px 0 30px;
+            border-top: 1px solid var(--xyz-border);
+            color: #2F4A62;
+        }
+        .footer a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            color: var(--xyz-primary);
+        }
+
+        /* ---------- RESPONSIVE BREAKPOINTS ---------- */
+        @media (max-width: 1024px) {
+            .nav-menu {
+                display: none;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .hero-grid, .category-grid, .offerings-grid,
+            .ds-grid, .cyber-grid, .ai-grid { 
+                grid-template-columns: repeat(2, 1fr); 
+            }
+            .feature-grid { 
+                grid-template-columns: repeat(2, 1fr); 
+            }
+            .testimonial-grid { 
+                grid-template-columns: repeat(2, 1fr); 
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-grid, .category-grid, .offerings-grid,
+            .feature-grid, .testimonial-grid,
+            .ds-grid, .cyber-grid, .ai-grid { 
+                grid-template-columns: 1fr; 
+            }
+
+            .banner-flex {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .banner-left a, .banner-right a {
+                margin-left: 0;
+                margin-top: 5px;
+            }
+
+            .discipline-tabs {
+                gap: 1rem;
+            }
+
+            .discipline-tab {
+                font-size: 1.2rem;
+            }
+
+            .software-eng-description {
+                padding: 30px 20px;
+            }
+
+            .stats-area {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 30px 20px;
+            }
+
+            .cta-large {
+                padding: 50px 20px;
+            }
+
+            .cta-large h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .badge-pill {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+                margin: 5px 0 !important;
+            }
+
+            .btn-outline {
+                margin-left: 0 !important;
+            }
+
+            .discipline-tabs {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .discipline-tab.active {
+                border-bottom: none;
+                border-left: 4px solid var(--xyz-primary);
+                padding-left: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- TOP BANNER -->
+    <div class="top-banner">
+        <div class="container banner-flex">
+            <div class="banner-left">
+                <i class="fas fa-bolt"></i> New: 
+                <strong>Software Engineering & AI Bootcamps</strong> 
+                <a href="#">Learn More</a>
+            </div>
+            <div class="banner-right">
+                <i class="fas fa-users"></i> XYZ Community 
+                <a href="#">Join Free</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="container header-row">
+            <div class="logo-area">
+                <i class="fas fa-mobile-alt logo-icon"></i>
+                <span class="logo-text">XYZ<span>Mobile</span></span>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <nav class="nav-menu">
+                <a href="#" class="nav-link active">Home</a>
+                <a href="courses.html" class="nav-link">Courses</a>
+                <a href="howitworks.html" class="nav-link">How it works</a>
+                <a href="community.html" class="nav-link">Community</a>
+                <a href="outcome.html" class="nav-link">Outcomes</a>
+                <a href="resources.html" class="nav-link">Resources</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="#" class="nav-link nav-cta">Enroll now</a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+    <div class="mobile-nav-menu" id="mobileNavMenu">
+        <button class="close-menu" id="closeMenuBtn">
+            <i class="fas fa-times"></i>
+        </button>
+        <a href="#" class="mobile-nav-link" onclick="closeMobileMenu()">Home</a>
+        <a href="courses.html" class="mobile-nav-link" onclick="closeMobileMenu()">Courses</a>
+        <a href="#" class="mobile-nav-link" onclick="closeMobileMenu()">How it works</a>
+        <a href="#" class="mobile-nav-link" onclick="closeMobileMenu()">Community</a>
+        <a href="#" class="mobile-nav-link" onclick="closeMobileMenu()">Outcomes</a>
+        <a href="#" class="mobile-nav-link" onclick="closeMobileMenu()">Resources</a>
+        <a href="#" class="mobile-nav-link mobile-nav-cta" onclick="closeMobileMenu()">Enroll now</a>
+    </div>
+
+    <main>
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <div class="container hero-grid">
+                <div>
+                    <h1>
+                        <span class="hero-highlight">Bootcamp</span>: Your Path to Tech
+                    </h1>
+                    <p class="hero-description">
+                        Whether you are a high school graduate, a university student or a working professional looking to upskill or switch to tech, XYZ Mobile offers world-class training tailored to your journey. We meet you where you are and guide you to where you want to go in the tech world.
+                    </p>
+                    <div class="hero-badge-group">
+                        <span class="badge-pill"><i class="fas fa-calendar"></i> Full-time Classes</span>
+                        <span class="badge-pill"><i class="fas fa-clock"></i> Part-time Classes</span>
+                        <span class="badge-pill"><i class="fas fa-laptop"></i> Remote Learning</span>
+                        <span class="badge-pill"><i class="fas fa-building"></i> In-person Learning</span>
+                    </div>
+                    <div style="margin-top: 28px;">
+                        <a href="courses.html" class="btn btn-primary">Explore programs</a>
+                        <a href="#" class="btn btn-outline" style="margin-left: 16px;">Contact admissions</a>
+                    </div>
+                </div>
+                <div class="hero-image-placeholder">
+                    <i class="fas fa-laptop-code"></i>
+                    <div style="font-weight: 700; font-size: 1.2rem; margin: 15px 0 5px;">12,000+ trained</div>
+                    <p style="margin-bottom: 15px;">Trusted by leading employers</p>
+                    <div style="background: white; padding: 8px 26px; border-radius: 60px; border: 2px solid var(--xyz-primary); color: var(--xyz-primary); font-weight: 600; display: inline-block;">
+                        <i class="fas fa-medal"></i> TVET Accredited
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DISCIPLINE TABS -->
+        <div class="container">
+            <div class="discipline-tabs">
+                <span class="discipline-tab active" onclick="showSection('software')">Software Engineering</span>
+                <span class="discipline-tab" onclick="showSection('datascience')">Data Science</span>
+                <span class="discipline-tab" onclick="showSection('cyber')">Cyber Security</span>
+                <span class="discipline-tab" onclick="showSection('ai')">AI</span>
+            </div>
+        </div>
+
+        <!-- SOFTWARE ENGINEERING SECTION -->
+        <div id="software-section" class="content-section active">
+            <div class="container">
+                <div class="software-eng-description">
+                    <h2>Software Engineering</h2>
+                    <p>Become a software engineer to help businesses develop software, build web applications, and products that will help shape the future of the company.</p>
+                </div>
+            </div>
+
+            <div class="container">
+                <h2 class="offerings-title">Course Offerings</h2>
+                <div class="offerings-grid">
+                    <div class="offering-card">
+                        <h3>Full Stack Software Engineering Bootcamp</h3>
+                        <div class="delivery-modes">Delivery modes:</div>
+                        <ul>
+                            <li><i class="fas fa-building"></i> Full-time Hybrid</li>
+                            <li><i class="fas fa-laptop"></i> Full-time Remote</li>
+                            <li><i class="fas fa-clock"></i> Part-time Remote</li>
+                        </ul>
+                    </div>
+                    <div class="offering-card">
+                        <h3>Introduction to DevOps Engineering</h3>
+                        <div class="delivery-modes">Delivery modes:</div>
+                        <ul>
+                            <li><i class="fas fa-clock"></i> Part-time Remote</li>
+                        </ul>
+                    </div>
+                    <div class="offering-card">
+                        <h3>AWS DevOps Engineering BootCamp</h3>
+                        <div class="delivery-modes">Delivery modes:</div>
+                        <ul>
+                            <li><i class="fas fa-clock"></i> Part-time Remote</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DATA SCIENCE SECTION -->
+        <div id="datascience-section" class="content-section">
+            <div class="container">
+                <h2 class="offerings-title">Data Science Programs</h2>
+                <div class="ds-grid">
+                    <div class="ds-card">
+                        <h3>Data Science Bootcamp</h3>
+                        <p>Intensive 24-week program covering Python, statistics, machine learning, and deep learning.</p>
+                        <div class="delivery-modes" style="margin-top: 20px;">Delivery modes:</div>
+                        <ul>
+                            <li><i class="fas fa-building"></i> Full-time Hybrid</li>
+                            <li><i class="fas fa-laptop"></i> Full-time Remote</li>
+                            <li><i class="fas fa-clock"></i> Part-time Remote</li>
+                        </ul>
+                    </div>
+                    <div class="ds-card">
+                        <h3>Data Analytics with Python</h3>
+                        <p>Learn pandas, numpy, visualization, and SQL. Perfect for beginners.</p>
+                        <div class="delivery-modes" style="margin-top: 20px;">Delivery modes:</div>
+                        <ul>
+                            <li><i class="fas fa-laptop"></i> Full-time Remote</li>
+                            <li><i class="fas fa-clock"></i> Part-time Remote</li>
+                        </ul>
+                    </div>
+                    <div class="ds-card">
+                        <h3>Machine Learning Engineering</h3>
+                        <p>Advanced ML algorithms, model deployment, MLOps, and production AI systems.</p>
+                        <div class="delivery-modes" style="margin-top: 20px;">Delivery modes:</div>
+                        <ul>
+                            <li><i class="fas fa-laptop"></i> Full-time Remote</li>
+                        </ul>
+                    </div>
+                    <div class="ds-card">
+                        <h3>Business Intelligence & Power BI</h3>
+                        <p>Master data visualization and business analytics with Microsoft Power BI.</p>
+                        <div class="delivery-modes" style="margin-top: 20px;">Delivery modes:</div>
+                        <ul>
+                            <li><i class="fas fa-clock"></i> Part-time Remote</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CYBER SECURITY SECTION -->
+        <div id="cyber-section" class="content-section">
+            <div class="container">
+                <h2 class="offerings-title">Cyber Security Programs</h2>
+                <div class="cyber-grid">
+                    <div class="ds-card">
+                        <h3>Cyber Security Bootcamp</h3>
+                        <p>Comprehensive 20-week program covering network security, ethical hacking, and defense.</p>
+                        <div class="delivery-modes" style="margin-top: 20px;">Delivery modes:</div>
+                        <ul>
+                            <li><i class="fas fa-building"></i> Full-time Hybrid</li>
+                            <li><i class="fas fa-laptop"></i> Full-time Remote</li>
+                        </ul>
+                    </div>
+                    <div class="ds-card">
+                        <h3>Ethical Hacking & Pen Testing</h3>
+                        <p>Learn to identify vulnerabilities and perform professional penetration tests.</p>
+                        <div class="delivery-modes" style="margin-top: 20px;">Delivery modes:</div>
+                        <ul>
+                            <li><i class="fas fa-laptop"></i> Full-time Remote</li>
+                            <li><i class="fas fa-clock"></i> Part-time Remote</li>
+                        </ul>
+                    </div>
+                    <div class="ds-card">
+                        <h3>SOC Analyst</h3>
+                        <p>Master threat monitoring, incident response, and security operations.</p>
+                        <div class="delivery-modes" style="margin-top: 20px;">Delivery modes:</div>
+                        <ul>
+                            <li><i class="fas fa-laptop"></i> Full-time Remote</li>
+                        </ul>
+                    </div>
+                    <div class="ds-card">
+                        <h3>Cloud Security (AWS/Azure)</h3>
+                        <p>Secure cloud infrastructure, compliance, and DevSecOps practices.</p>
+                        <div class="delivery-modes" style="margin-top: 20px;">Delivery modes:</div>
+                        <ul>
+                            <li><i class="fas fa-clock"></i> Part-time Remote</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI SECTION -->
+        <div id="ai-section" class="content-section">
+            <div class="container">
+                <h2 class="offerings-title">AI & Machine Learning Programs</h2>
+                <div class="ai-grid">
+                    <div class="ds-card">
+                        <h3>Artificial Intelligence Bootcamp</h3>
+                        <p>Comprehensive AI program covering neural networks, deep learning, and LLMs.</p>
+                        <div class="delivery-modes" style="margin-top: 20px;">Delivery modes:</div>
+                        <ul>
+                            <li><i class="fas fa-building"></i> Full-time Hybrid</li>
+                            <li><i class="fas fa-laptop"></i> Full-time Remote</li>
+                        </ul>
+                    </div>
+                    <div class="ds-card">
+                        <h3>Generative AI Essentials</h3>
+                        <p>Master prompt engineering, AI agents, and no-code AI automation.</p>
+                        <div class="delivery-modes" style="margin-top: 20px;">Delivery modes:</div>
+                        <ul>
+                            <li><i class="fas fa-laptop"></i> Full-time Remote</li>
+                            <li><i class="fas fa-clock"></i> Part-time Remote</li>
+                        </ul>
+                    </div>
+                    <div class="ds-card">
+                        <h3>Deep Learning Specialization</h3>
+                        <p>Advanced neural networks, computer vision, and NLP with TensorFlow/PyTorch.</p>
+                        <div class="delivery-modes" style="margin-top: 20px;">Delivery modes:</div>
+                        <ul>
+                            <li><i class="fas fa-laptop"></i> Full-time Remote</li>
+                        </ul>
+                    </div>
+                    <div class="ds-card">
+                        <h3>AI for Business Leaders</h3>
+                        <p>Strategic AI implementation and AI project management for managers.</p>
+                        <div class="delivery-modes" style="margin-top: 20px;">Delivery modes:</div>
+                        <ul>
+                            <li><i class="fas fa-clock"></i> Part-time Remote</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CATEGORY CARDS -->
+        <div class="container">
+            <div class="category-grid">
+                <div class="category-card" onclick="showSection('software')">
+                    <i class="fas fa-code"></i>
+                    <h3>Software Engineering</h3>
+                    <p>Full-stack, backend, frontend, and mobile development</p>
+                </div>
+                <div class="category-card" onclick="showSection('datascience')">
+                    <i class="fas fa-chart-bar"></i>
+                    <h3>Data Science</h3>
+                    <p>Analytics, machine learning, and data engineering</p>
+                </div>
+                <div class="category-card" onclick="showSection('cyber')">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Cyber Security</h3>
+                    <p>Network security, ethical hacking, and defense</p>
+                </div>
+                <div class="category-card" onclick="showSection('ai')">
+                    <i class="fas fa-brain"></i>
+                    <h3>AI</h3>
+                    <p>Artificial intelligence, deep learning, and LLMs</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FEATURE PILLARS -->
+        <div class="container">
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <i class="fas fa-rocket"></i>
+                    <h4>Project-Based Learning</h4>
+                    <p>Build real applications through hands-on projects that mimic industry challenges.</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-chalkboard-user"></i>
+                    <h4>Technical Mentor Support</h4>
+                    <p>Live classes led by experts from top tech companies.</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-briefcase"></i>
+                    <h4>Career Services</h4>
+                    <p>CV reviews, mock interviews, and job placement support.</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-file-signature"></i>
+                    <h4>Industry-Relevant Curriculum</h4>
+                    <p>Constantly updated with the latest tools and employer needs.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATS -->
+        <div class="container stats-area">
+            <div class="stat-block">
+                <span class="stat-number">2016</span>
+                <span class="stat-label">Founded</span>
+            </div>
+            <div class="stat-block">
+                <span class="stat-number">12K+</span>
+                <span class="stat-label">Trained</span>
+            </div>
+            <div class="stat-block">
+                <span class="stat-number">800+</span>
+                <span class="stat-label">Employers</span>
+            </div>
+            <div class="stat-block">
+                <span class="stat-number">94%</span>
+                <span class="stat-label">Satisfaction</span>
+            </div>
+        </div>
+
+        <!-- TESTIMONIALS -->
+        <div class="container">
+            <h2 class="offerings-title">Success Stories</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <i class="fas fa-quote-left"></i>
+                    <p class="testimonial-text">"The software engineering bootcamp transformed my career. Now I'm leading development teams."</p>
+                    <span class="testimonial-author">Sarah K.</span>
+                </div>
+                <div class="testimonial-card">
+                    <i class="fas fa-quote-left"></i>
+                    <p class="testimonial-text">"From data science novice to analyst at a major telco in 6 months."</p>
+                    <span class="testimonial-author">Michael O.</span>
+                </div>
+                <div class="testimonial-card">
+                    <i class="fas fa-quote-left"></i>
+                    <p class="testimonial-text">"The cyber security program gave me hands-on skills I use every day."</p>
+                    <span class="testimonial-author">Janet M.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- COMPANY STRIP -->
+        <div class="company-strip">
+            <div class="container">
+                <p style="font-weight: 600; margin-bottom: 24px;"><i class="fas fa-building"></i> Where Our Graduates Work</p>
+                <div class="logo-cloud">
+                    <span>Safaricom</span>
+                    <span>MTN</span>
+                    <span>Orange</span>
+                    <span>Vodacom</span>
+                    <span>Airtel</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- FINAL CTA -->
+        <div class="container">
+            <div class="cta-large">
+                <h2>Start Your Tech Journey Today</h2>
+                <p style="margin: 24px auto;">Software Engineering · Data Science · Cyber Security · AI</p>
+                <a href="courses.html"><button class="btn-cta-giant">Browse All Programs →</button></a>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 30px;">
+            <div>
+                <span style="font-size: 1.7rem; font-weight: 700;">XYZ<span style="color: var(--xyz-primary);">Mobile</span></span>
+                <p style="margin-top: 10px;">© 2026 XYZ Mobile Institution</p>
+            </div>
+            <div style="display: flex; gap: 60px; flex-wrap: wrap;">
+                <div>
+                    <strong>Programs</strong><br>
+                    <a href="#" onclick="showSection('software')">Software Eng</a><br>
+                    <a href="#" onclick="showSection('datascience')">Data Science</a><br>
+                    <a href="#" onclick="showSection('cyber')">Cyber Security</a><br>
+                    <a href="#" onclick="showSection('ai')">AI</a>
+                </div>
+                <div>
+                    <strong>Company</strong><br>
+                    <a href="#">About</a><br>
+                    <a href="#">Community</a><br>
+                    <a href="#">Careers</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile Menu Functions
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileNavMenu = document.getElementById('mobileNavMenu');
+        const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+
+        function openMobileMenu() {
+            mobileNavMenu.classList.add('active');
+            mobileNavOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            mobileNavMenu.classList.remove('active');
+            mobileNavOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        mobileMenuBtn.addEventListener('click', openMobileMenu);
+        closeMenuBtn.addEventListener('click', closeMobileMenu);
+        mobileNavOverlay.addEventListener('click', closeMobileMenu);
+
+        // Section Switching Function
+        function showSection(section) {
+            // Hide all sections
+            document.getElementById('software-section').classList.remove('active');
+            document.getElementById('datascience-section').classList.remove('active');
+            document.getElementById('cyber-section').classList.remove('active');
+            document.getElementById('ai-section').classList.remove('active');
+            
+            // Show selected section
+            document.getElementById(section + '-section').classList.add('active');
+            
+            // Update active tab
+            document.querySelectorAll('.discipline-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Find and activate the correct tab
+            let tabIndex = 0;
+            switch(section) {
+                case 'software': tabIndex = 0; break;
+                case 'datascience': tabIndex = 1; break;
+                case 'cyber': tabIndex = 2; break;
+                case 'ai': tabIndex = 3; break;
+            }
+            document.querySelectorAll('.discipline-tab')[tabIndex].classList.add('active');
+            
+            // Scroll to top of sections smoothly
+            window.scrollTo({
+                top: document.querySelector('.discipline-tabs').offsetTop - 100,
+                behavior: 'smooth'
+            });
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 1024) {
+                closeMobileMenu();
+            }
+        });
+
+        // Prevent default on footer links that use showSection
+        document.querySelectorAll('.footer a[onclick^="showSection"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+            });
+        });
+    </script>
+
+    <!-- Firebase SDKs (always load these first) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+<!-- Your Firebase config and helper functions -->
+<script src="firebase-config.js"></script>
+
+</body>
+</html>
