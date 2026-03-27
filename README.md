@@ -109,15 +109,18 @@ Update index.js with your M-Pesa credentials:
 
 ### Step 5: Run Local Development
 # Terminal 1: Start Node.js server
-```node index.js
+```
+node index.js
 ```
 
 # Terminal 2: Start ngrok tunnel
-```ngrok http 5000
+```
+ngrok http 5000
 ```
 
 # Open browser at your ngrok URL
-```https://your-ngrok-url.ngrok-free.dev
+```
+https://your-ngrok-url.ngrok-free.dev
 ```
 
 M-Pesa Integration
