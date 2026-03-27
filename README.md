@@ -1,3 +1,83 @@
+# XYZ Mobile Institution
+
+Official website and enrollment system for XYZ Mobile Institution - a tech bootcamp offering courses in Software Engineering, Data Science, Cyber Security, and Artificial Intelligence.
+
+## Live Demo
+
+[https://isaac-mastlike-fretfully.ngrok-free.dev/index.html]
+
+## Features
+
+### Core Features
+- Responsive design that works on desktop, tablet, and mobile devices
+- Course catalog with filtering by level and search functionality
+- Student enrollment system with M-Pesa payment integration
+- Newsletter signup for updates and tech news
+- Contact form with Firebase storage
+- Community page with events and success stories
+- Student outcomes page with employment statistics
+- Resources page with blog posts, developer tools, and webinars
+
+### M-Pesa Payment Integration
+- STK Push payment prompts sent directly to student phones
+- Application fee of KES 1,500 (non-refundable)
+- Sandbox environment for testing
+- Automatic enrollment upon successful payment
+- Real-time payment confirmation updates
+- Transaction tracking in Firebase Firestore
+
+## Technology Stack
+
+### Frontend
+- HTML5
+- CSS3 with CSS Grid and Flexbox
+- JavaScript (ES6+)
+- Font Awesome 6 for icons
+- Google Fonts (Inter and Space Grotesk)
+
+### Backend
+- Firebase Firestore for database storage
+- Firebase Hosting for deployment
+- Node.js with Express for M-Pesa API proxy
+- M-Pesa Lipa Na M-Pesa Online API (STK Push)
+
+### Development Tools
+- Git for version control
+- GitHub for repository hosting
+- ngrok for local testing tunnels
+- VS Code as code editor
+
+## Project Structure
+xyz-mobile/
+├── index.html # Home page
+├── courses.html # Course catalog with filtering
+├── enroll.html # Student enrollment with M-Pesa
+├── contact.html # Contact form with Firebase storage
+├── community.html # Community events and stories
+├── outcome.html # Student outcomes and statistics
+├── resources.html # Learning resources and blog
+├── howitworks.html # How it works page
+├── firebase-config.js # Firebase configuration
+├── index.js # Node.js server for M-Pesa
+├── callback.html # M-Pesa callback handler
+└── README.md # Project documentation
+
+
+## Installation
+
+### Prerequisites
+- Node.js version 14 or higher
+- Firebase account
+- M-Pesa Sandbox credentials from Safaricom Developer Portal
+- ngrok for local testing (optional)
+
+### Step 1: Clone the Repository
+
+```bash
+
+git clone https://github.com/Kshee04/xyz-mobile.git
+cd xyz-mobile
+```
 
 ### Step 2: Set Up Firebase
 Create a project at the Firebase Console
@@ -9,12 +89,14 @@ Register a web app and copy your Firebase configuration
 Replace the firebaseConfig in firebase-config.js with your credentials
 
 ### Step 3: Set Up M-Pesa Backend
-npm install express cors
+```npm install express cors
 node index.js
+```
 
 ### Step 4: Configure Environment Variables
 Update index.js with your M-Pesa credentials:
-const MPESA_CONFIG = {
+
+```const MPESA_CONFIG = {
     businessShortCode: '174379',
     passkey: 'your_passkey_here',
     consumerKey: 'your_consumer_key',
@@ -23,37 +105,45 @@ const MPESA_CONFIG = {
     accountReference: 'XYZMobile',
     transactionDesc: 'Application Fee'
 };
+```
 
 ### Step 5: Run Local Development
 # Terminal 1: Start Node.js server
+```
 node index.js
+```
 
 # Terminal 2: Start ngrok tunnel
+```
 ngrok http 5000
+```
 
 # Open browser at your ngrok URL
+```
 https://your-ngrok-url.ngrok-free.dev
+```
 
 M-Pesa Integration
 How It Works
-Student completes the enrollment form with their M-Pesa number
+1. Student completes the enrollment form with their M-Pesa number
 
-Clicking the Pay button sends a request to the Node.js server
+2. Clicking the Pay button sends a request to the Node.js server
 
-The server initiates an STK Push to the student's phone
+3. The server initiates an STK Push to the student's phone
 
-Student receives the prompt and enters their PIN
+4. Student receives the prompt and enters their PIN
 
-M-Pesa confirms the payment to the callback URL
+5. M-Pesa confirms the payment to the callback URL
 
-The server updates Firebase with payment status and enrollment details
+6. The server updates Firebase with payment status and enrollment details
 
-Student receives confirmation with an enrollment number
+7. Student receives confirmation with an enrollment number
 
 Sandbox Testing
-Test phone number: 254708374149
+```Test phone number: 254708374149
 
 Test PIN: 12345
+```
 
 No actual money is deducted in sandbox mode
 
@@ -62,11 +152,11 @@ The test number always returns success
 Production Deployment
 To switch to live payments:
 
-Apply for production credentials at the Safaricom Developer Portal
+1. Apply for production credentials at the Safaricom Developer Portal
 
-Update API URLs from sandbox.safaricom.co.ke to api.safaricom.co.ke
+2. Update API URLs from sandbox.safaricom.co.ke to api.safaricom.co.ke
 
-Use your live business shortcode and credentials
+3. Use your live business shortcode and credentials
 
 Ensure the callback URL uses HTTPS (Firebase Hosting provides this)
 
@@ -74,6 +164,7 @@ Firebase Collections
 enrollments Collection
 Stores all student enrollment records after successful payment.
 
+```
 {
   firstName: "John",
   lastName: "Doe",
@@ -95,9 +186,10 @@ Stores all student enrollment records after successful payment.
   status: "active",
   createdAt: timestamp
 }
-
+```
 transactions Collection
 Tracks all M-Pesa payment attempts.
+```
 {
   transactionId: "XYZ1734567890123",
   amount: 1500,
@@ -109,9 +201,11 @@ Tracks all M-Pesa payment attempts.
   createdAt: timestamp,
   completedAt: timestamp
 }
+```
 
 contacts Collection
 Stores contact form submissions and newsletter signups.
+```
 {
   name: "John Doe",
   email: "john@example.com",
@@ -122,7 +216,7 @@ Stores contact form submissions and newsletter signups.
   timestamp: timestamp,
   status: "new"
 }
-
+```
 Available Courses
 Course	Duration	Delivery Modes
 Full Stack Software Engineering	24 weeks	Hybrid, Remote, Part-time
@@ -135,17 +229,19 @@ DevOps Engineering	16 weeks	Remote, Part-time
 Deployment
 Deploy to Firebase Hosting
 
-npm install -g firebase-tools
+```npm install -g firebase-tools
 firebase login
 firebase init hosting
 firebase deploy
-
+```
 Your site will be available at: https://your-project-id.web.app (yours)
 
+```
 Git Commands for Updates
 git add .
 git commit -m "Description of changes"
 git push origin main
+```
 
 Student Outcomes Statistics
 94% employment rate within 6 months of graduation
