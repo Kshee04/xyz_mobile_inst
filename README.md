@@ -77,6 +77,7 @@ xyz-mobile/
 
 git clone https://github.com/Kshee04/xyz-mobile.git
 cd xyz-mobile
+```
 
 ### Step 2: Set Up Firebase
 Create a project at the Firebase Console
