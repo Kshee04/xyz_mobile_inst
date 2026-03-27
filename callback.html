@@ -67,13 +67,13 @@
                             createdAt: firebase.firestore.FieldValue.serverTimestamp()
                         });
                         
-                        console.log(`✅ Enrollment created: ${enrollmentNumber}`);
+                        console.log(` Enrollment created: ${enrollmentNumber}`);
                     }
                     
-                    console.log(`✅ Transaction ${checkoutRequestID} updated to ${status}`);
+                    console.log(` Transaction ${checkoutRequestID} updated to ${status}`);
                     return true;
                 } else {
-                    console.error(`❌ Transaction ${checkoutRequestID} not found`);
+                    console.error(` Transaction ${checkoutRequestID} not found`);
                     return false;
                 }
             } catch (error) {
@@ -99,7 +99,7 @@
         }
 
         function processCallback(callbackData) {
-            console.log('📞 Received M-Pesa Callback:', callbackData);
+            console.log(' Received M-Pesa Callback:', callbackData);
             
             const resultCode = callbackData?.Body?.stkCallback?.ResultCode;
             const checkoutRequestID = callbackData?.Body?.stkCallback?.CheckoutRequestID;
@@ -121,7 +121,7 @@
                 
                 updateTransaction(checkoutRequestID, 'completed', mpesaReceiptNumber);
                 document.body.innerHTML = `
-                    <h2>✅ Payment Successful!</h2>
+                    <h2> Payment Successful!</h2>
                     <p>Transaction ID: ${checkoutRequestID}</p>
                     <p>Receipt Number: ${mpesaReceiptNumber}</p>
                     <p>You can close this window.</p>
@@ -130,7 +130,7 @@
                 // Payment failed
                 updateTransaction(checkoutRequestID, 'failed');
                 document.body.innerHTML = `
-                    <h2>❌ Payment Failed</h2>
+                    <h2> Payment Failed</h2>
                     <p>${resultDesc || 'Payment was cancelled or failed.'}</p>
                     <p>Please try again.</p>
                 `;

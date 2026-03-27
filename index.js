@@ -7,12 +7,14 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('.'));
 
+require('dotenv').config();
+
 const MPESA_CONFIG = {
-    businessShortCode: '174379',
-    passkey: 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919',
-    consumerKey: 'sLBKnjg2bOqLue1g47gKPNGDAmpWn95SZWZGjd9rukT7OFvV',
-    consumerSecret: 'eoTttJGo3O5ekAGdVlI7N9zVuCwGPwGkvezu1MXGo9ezmhiLaszUM69bD6dQ8w3D',
-    callbackURL: 'https://isaac-mastlike-fretfully.ngrok-free.dev/callback',
+    businessShortCode: process.env.MPESA_SHORTCODE,
+    passkey: process.env.MPESA_PASSKEY,
+    consumerKey: process.env.MPESA_CONSUMER_KEY,
+    consumerSecret: process.env.MPESA_CONSUMER_SECRET,
+    callbackURL: 'https://your-ngrok-url.ngrok-free.dev/callback',
     accountReference: 'XYZMobile',
     transactionDesc: 'Application Fee'
 };

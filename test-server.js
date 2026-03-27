@@ -10,6 +10,6 @@ app.get('/test', (req, res) => {
 });
 
 app.listen(3000, () => {
-    console.log('✅ Test server running on http://localhost:3000');
+    console.log(' Test server running on http://localhost:3000');
     console.log('Test endpoint: http://localhost:3000/test');
 });
