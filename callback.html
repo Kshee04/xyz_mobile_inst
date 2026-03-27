@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>M-Pesa Callback Handler</title>
+</head>
+<body>
+    <h1>M-Pesa Callback Handler</h1>
+    <p>This page handles payment confirmations.</p>
+    <p>Check console for logs.</p>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Your Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2Ee8L_7cMX6vHw-BGJOW-y3Ut1EbDaBo",
+            authDomain: "xyz-mobile-institution-b2591.firebaseapp.com",
+            projectId: "xyz-mobile-institution-b2591",
+            storageBucket: "xyz-mobile-institution-b2591.firebasestorage.app",
+            messagingSenderId: "634389271239",
+            appId: "1.634389271239:web:612670fd0cd80a53ad24e2"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Function to update transaction status
+        async function updateTransaction(checkoutRequestID, status, mpesaReceiptNumber = null) {
+            try {
+                // Find the transaction by checkoutRequestID
+                const querySnapshot = await db.collection('transactions')
+                    .where('checkoutRequestID', '==', checkoutRequestID)
+                    .get();
+
+                if (!querySnapshot.empty) {
+                    const transactionDoc = querySnapshot.docs[0];
+                    const transactionData = transactionDoc.data();
+                    
+                    // Update transaction status
+                    await transactionDoc.ref.update({
+                        status: status,
+                        mpesaReceiptNumber: mpesaReceiptNumber,
+                        completedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+
+                    // If payment was successful, update enrollment
+                    if (status === 'completed' && mpesaReceiptNumber) {
+                        const enrollmentData = transactionData.enrollmentData;
+                        
+                        // Generate enrollment number
+                        const year = new Date().getFullYear();
+                        const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+                        const enrollmentNumber = `XYZ-${year}-${random}`;
+                        
+                        // Save enrollment with payment confirmation
+                        await db.collection('enrollments').add({
+                            ...enrollmentData,
+                            enrollmentNumber: enrollmentNumber,
+                            paymentStatus: 'paid',
+                            paymentAmount: 1500,
+                            paymentReceipt: mpesaReceiptNumber,
+                            paymentTransactionId: transactionDoc.id,
+                            paymentDate: firebase.firestore.FieldValue.serverTimestamp(),
+                            status: 'active',
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                        
+                        console.log(`✅ Enrollment created: ${enrollmentNumber}`);
+                    }
+                    
+                    console.log(`✅ Transaction ${checkoutRequestID} updated to ${status}`);
+                    return true;
+                } else {
+                    console.error(`❌ Transaction ${checkoutRequestID} not found`);
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error updating transaction:', error);
+                return false;
+            }
+        }
+
+        // Parse M-Pesa callback data
+        function parseCallbackData() {
+            // Check if this is a POST request with JSON body
+            const urlParams = new URLSearchParams(window.location.search);
+            const jsonData = urlParams.get('data');
+            
+            if (jsonData) {
+                try {
+                    const callbackData = JSON.parse(decodeURIComponent(jsonData));
+                    processCallback(callbackData);
+                } catch (e) {
+                    console.error('Failed to parse callback data:', e);
+                }
+            }
+        }
+
+        function processCallback(callbackData) {
+            console.log('📞 Received M-Pesa Callback:', callbackData);
+            
+            const resultCode = callbackData?.Body?.stkCallback?.ResultCode;
+            const checkoutRequestID = callbackData?.Body?.stkCallback?.CheckoutRequestID;
+            const resultDesc = callbackData?.Body?.stkCallback?.ResultDesc;
+            
+            if (resultCode === '0') {
+                // Payment successful
+                const callbackMetadata = callbackData.Body.stkCallback.CallbackMetadata;
+                let mpesaReceiptNumber = '';
+                
+                if (callbackMetadata && callbackMetadata.Item) {
+                    for (let item of callbackMetadata.Item) {
+                        if (item.Name === 'MpesaReceiptNumber') {
+                            mpesaReceiptNumber = item.Value;
+                            break;
+                        }
+                    }
+                }
+                
+                updateTransaction(checkoutRequestID, 'completed', mpesaReceiptNumber);
+                document.body.innerHTML = `
+                    <h2>✅ Payment Successful!</h2>
+                    <p>Transaction ID: ${checkoutRequestID}</p>
+                    <p>Receipt Number: ${mpesaReceiptNumber}</p>
+                    <p>You can close this window.</p>
+                `;
+            } else {
+                // Payment failed
+                updateTransaction(checkoutRequestID, 'failed');
+                document.body.innerHTML = `
+                    <h2>❌ Payment Failed</h2>
+                    <p>${resultDesc || 'Payment was cancelled or failed.'}</p>
+                    <p>Please try again.</p>
+                `;
+            }
+        }
+
+        // For GET requests (testing), show a simple page
+        if (window.location.search.includes('data')) {
+            parseCallbackData();
+        } else {
+            document.body.innerHTML += `
+                <div style="margin-top: 20px; padding: 20px; background: #f0f0f0;">
+                    <h2>Callback Endpoint Ready</h2>
+                    <p>This URL should be set as your M-Pesa callback URL:</p>
+                    <code style="background: #333; color: #0f0; padding: 10px; display: block; margin: 10px 0;">
+                        ${window.location.href}
+                    </code>
+                    <p>M-Pesa will send payment confirmations here.</p>
+                    <p>You can test with:</p>
+                    <button onclick="testCallback()" style="padding: 10px; margin: 10px 0;">Test Callback</button>
+                </div>
+            `;
+        }
+
+        async function testCallback() {
+            const testData = {
+                Body: {
+                    stkCallback: {
+                        ResultCode: "0",
+                        CheckoutRequestID: "test_12345",
+                        ResultDesc: "Success",
+                        CallbackMetadata: {
+                            Item: [
+                                { Name: "MpesaReceiptNumber", Value: "TEST123456" },
+                                { Name: "Amount", Value: 1500 }
+                            ]
+                        }
+                    }
+                }
+            };
+            
+            console.log('Testing callback...');
+            processCallback(testData);
+            alert('Test callback processed. Check console for results.');
+        }
+    </script>
+</body>
+</html>
